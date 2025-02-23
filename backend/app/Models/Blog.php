@@ -12,8 +12,10 @@ class Blog extends Model
         'title',
         'snippet',
         'content',
+        'url',
         'published_at',
         'source', // todo
+        'origin',
         'authors',
         'image',
     ];
