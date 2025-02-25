@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-
+use App\Models\UserPreference;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
 /**
@@ -26,7 +28,7 @@ use Illuminate\Routing\Controller;
  *      )
  *  )
  */
-class AuthController extends Controller
+class UserController extends Controller
 {
 
     /**
@@ -128,4 +130,96 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Store a new user preference.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @OA\Get(
+     *     path="/api/user-preferences",
+     *     summary="user preferences",
+     *     tags={"User"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(response="200", description="List of preferences"),
+     * )
+     */
+    public function getUserPreferences(Request $request)
+    {
+        $preferences = UserPreference::where('user_id', $request->user()->id)->get();
+
+        return response()->json([
+            'message'    => 'User preferences are ready.',
+            'preferences' => $preferences
+        ]);
+    }
+
+    /**
+     * Store a new user preference.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @OA\Post(
+     *     path="/api/user-preferences",
+     *     summary="Add a new user preference",
+     *     tags={"User"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"type", "value"},
+     *             @OA\Property(property="type", type="string", example="theme"),
+     *             @OA\Property(property="value", type="string", example="dark_mode")
+     *         )
+     *     ),
+     *     @OA\Response(response="201", description="Preference created successfully"),
+     *     @OA\Response(response="422", description="Validation error")
+     * )
+     */
+    public function storeUserPreference(Request $request)
+    {
+        $request->validate([
+            'type'  => 'required|in:category,source,author',
+            'value' => 'required|string|max:255',
+        ]);
+
+        $preference = UserPreference::create([
+            'user_id' => auth()->id(),
+            'type'    => $request->type,
+            'value'   => $request->value,
+        ]);
+
+        return response()->json([
+            'message'    => 'User preference saved successfully.',
+            'preference' => $preference
+        ], Response::HTTP_CREATED);
+    }
+
+    /**
+     * Delete a user preference.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @OA\Delete(
+     *     path="/api/user-preferences/{id}",
+     *     summary="Delete a user preference",
+     *     tags={"User"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         example=1
+     *     ),
+     *     @OA\Response(response="200", description="Preference deleted successfully"),
+     *     @OA\Response(response="404", description="Preference not found")
+     * )
+     */
+    public function deleteUserPreference($id)
+    {
+        $preference = UserPreference::where('user_id', auth()->id())->findOrFail($id);
+        $preference->delete();
+
+        return response()->json(['message' => 'User preference deleted successfully.']);
+    }
 }
