@@ -18,7 +18,9 @@ Route::middleware(AuthenticateApi::class)->group(function() {
 
     // blog routes
     Route::post('/blogs', [BlogController::class, 'store']);
+    Route::put('/blogs/{id}', [BlogController::class, 'update']);
     Route::get('/blogs/search', [BlogController::class, 'search']);
+    Route::delete('/blogs/{id}', [BlogController::class, 'delete']);
 
     // user routes
     Route::post('/logout', [UserController::class, 'logout']);
