@@ -8,13 +8,15 @@ return new class extends Migration {
     {
         Schema::create('blogs', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('snippet');
+            $table->string('title',500);
+            $table->text('snippet');
             $table->text('content');
             $table->timestamp('published_at')->nullable();
             $table->string('source')->nullable();
             $table->json('authors')->nullable();
-            $table->string('image')->nullable();
+            $table->string('image',500)->nullable();
+            $table->string('url',500)->nullable();
+            $table->string('origin')->nullable();
             $table->timestamps();
         });
     }
