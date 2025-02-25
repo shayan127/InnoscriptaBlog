@@ -31,6 +31,8 @@ class FetchNewsJob implements ShouldQueue
                 $categoryIds[] = $category->id;
             }
             $blog->categories()->attach($categoryIds);
+            $blog->updated_at = null; // to trigger observer
+            $blog->save();
         }
     }
 }
