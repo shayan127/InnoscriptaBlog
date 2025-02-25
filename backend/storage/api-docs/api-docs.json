@@ -126,39 +126,87 @@
                     {
                         "name": "search",
                         "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "apple"
-                    },
-                    {
-                        "name": "date",
-                        "in": "query",
+                        "description": "Search keyword",
                         "required": false,
                         "schema": {
                             "type": "string",
-                            "format": "date"
-                        },
-                        "example": "2024-02-25"
+                            "maxLength": 255
+                        }
                     },
                     {
                         "name": "category",
                         "in": "query",
+                        "description": "Category ID",
                         "required": false,
                         "schema": {
-                            "type": "string"
-                        },
-                        "example": "Technology"
+                            "type": "integer"
+                        }
                     },
                     {
                         "name": "source",
                         "in": "query",
+                        "description": "News source",
                         "required": false,
                         "schema": {
-                            "type": "string"
-                        },
-                        "example": "The New York Times"
+                            "type": "string",
+                            "maxLength": 255
+                        }
+                    },
+                    {
+                        "name": "origin",
+                        "in": "query",
+                        "description": "Origin of the news",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "NYT",
+                                "Guardian",
+                                "NewsAPI"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "Start date for filtering",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2024-02-25",
+                            "nullable": true
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "End date for filtering",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2024-02-25",
+                            "nullable": true
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
                 ],
                 "responses": {
@@ -167,6 +215,26 @@
                     },
                     "422": {
                         "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/origins": {
+            "get": {
+                "tags": [
+                    "Metadata"
+                ],
+                "summary": "Get all origins",
+                "description": "Get Origins",
+                "operationId": "1c8c9d7b69f5d925050c3bcc59da54e5",
+                "responses": {
+                    "200": {
+                        "description": "List of origins"
                     }
                 },
                 "security": [

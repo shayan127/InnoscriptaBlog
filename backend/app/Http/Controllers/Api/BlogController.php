@@ -151,40 +151,46 @@ class BlogController extends Controller
      *     summary="Search for blogs",
      *     tags={"Blogs"},
      *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(
-     *         name="search",
-     *         in="query",
-     *         required=false,
-     *         @OA\Schema(type="string"),
-     *         example="apple"
-     *     ),
-     *     @OA\Parameter(
-     *         name="date",
-     *         in="query",
-     *         required=false,
-     *         @OA\Schema(type="string", format="date"),
-     *         example="2024-02-25"
-     *     ),
-     *     @OA\Parameter(
-     *         name="category",
-     *         in="query",
-     *         required=false,
-     *         @OA\Schema(type="string"),
-     *         example="Technology"
-     *     ),
-     *     @OA\Parameter(
-     *         name="source",
-     *         in="query",
-     *         required=false,
-     *         @OA\Schema(type="string"),
-     *         example="The New York Times"
-     *     ),
+     *     @OA\Parameter(name="search", in="query", required=false, description="Search keyword", @OA\Schema(type="string", maxLength=255)),
+     *     @OA\Parameter(name="category", in="query", required=false, description="Category ID", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="source", in="query", required=false, description="News source", @OA\Schema(type="string", maxLength=255)),
+     *     @OA\Parameter(name="origin", in="query", required=false, description="Origin of the news", @OA\Schema(type="string", enum={"NYT", "Guardian", "NewsAPI"})),
+     *     @OA\Parameter(name="from", in="query", required=false, description="Start date for filtering", @OA\Schema(type="string", type="string", format="date", nullable=true, example="2024-02-25")),
+     *     @OA\Parameter(name="to", in="query", required=false, description="End date for filtering", @OA\Schema(type="string", format="date", nullable=true, example="2024-02-25")),
+     *     @OA\Parameter(name="per_page", in="query", required=false, description="Per page", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="page", in="query", required=false, description="Page", @OA\Schema(type="integer")),
      *     @OA\Response(response="200", description="Search results returned successfully"),
      *     @OA\Response(response="422", description="Validation error")
      * )
      */
     public function search(SearchBlogRequest $request)
     {
-        // todo
+        $filter = $request->validated();
+        $preferences = $request->user()->preferences()->get();
+
+        $results = $this->elasticsearch->searchBlogs(
+            $filter['search'] ?? null,
+            $filter['from'] ?? null,
+            $filter['to'] ?? null,
+            $filter['category'] ?? null,
+            $filter['source'] ?? null,
+            $filter['origin'] ?? null,
+            $preferences->where('type', 'category')->pluck('value')->toArray(),
+            $preferences->where('type', 'source')->pluck('value')->toArray(),
+            $preferences->where('type', 'author')->pluck('value')->toArray()
+        );
+
+
+        $blogIds = collect($results)->pluck('_id')->toArray();
+
+        $query = Blog::with('categories')->whereIn('id', $blogIds)
+            ->orderByRaw("FIELD(id, " . implode(',', $blogIds) . ")");
+
+        $blogs = $query->paginate($filter['per_page'] ?? 20);
+
+        return response()->json([
+            'total'   => count($blogIds),
+            'results' => $blogs,
+        ]);
     }
 }

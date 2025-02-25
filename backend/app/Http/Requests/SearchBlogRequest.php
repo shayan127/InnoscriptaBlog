@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Blog;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SearchBlogRequest extends FormRequest
@@ -17,7 +18,11 @@ class SearchBlogRequest extends FormRequest
             'search'       => 'nullable|string|max:255',
             'category'     => 'nullable|int',
             'source'       => 'nullable|string|max:255',
-            'date'         => 'nullable|date',
+            'origin'       => 'nullable|in:'.implode(',', config('news.active_origins', ['none'])),
+            'from'         => 'nullable|date',
+            'to'           => 'nullable|date',
+            'page'         => 'nullable|int',
+            'per_page'     => 'nullable|int',
         ];
     }
 }
