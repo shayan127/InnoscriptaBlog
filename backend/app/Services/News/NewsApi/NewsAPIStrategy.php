@@ -4,9 +4,7 @@ namespace App\Services\News\NewsApi;
 
 use App\Services\News\AbstractNewsStrategy;
 use App\Services\News\NewsAdapterInterface;
-use App\Services\News\NYT\NYTAdapter;
 use Carbon\Carbon;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Http;
 
 class NewsAPIStrategy extends AbstractNewsStrategy
@@ -31,6 +29,7 @@ class NewsAPIStrategy extends AbstractNewsStrategy
 
     protected function fetch($page): array
     {
+        sleep(30);
         $response = Http::get($this->config['base_url'] . '/v2/everything', [
             'apiKey' => $this->config['api_key'],
             'domains' => 'techcrunch.com,thenextweb.com',
@@ -39,9 +38,9 @@ class NewsAPIStrategy extends AbstractNewsStrategy
             'page' => $page,
         ]);
 
-        if ($response->successful() && !isset($data['articles'])) {
+        if ($response->successful()) {
             $data = $response->json();
-            return $data['articles'];
+            return $data['articles'] ?? [];
         }
 
         return [];

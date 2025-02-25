@@ -11,6 +11,22 @@ use Illuminate\Routing\Controller;
 class MetadataController extends Controller
 {
     /**
+     * Get Origins
+     *
+     * @OA\Get(
+     *     path="/api/origins",
+     *     summary="Get all origins",
+     *     tags={"Metadata"},
+     *     @OA\Response(response=200, description="List of origins"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function origins(Request $request)
+    {
+        return response()->json(config('news.active_origins' , []));
+    }
+
+    /**
      * Get Sources
      *
      * @OA\Get(

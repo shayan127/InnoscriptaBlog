@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->json('authors')->nullable();
             $table->string('image',500)->nullable();
             $table->string('url',500)->nullable();
-            $table->string('origin')->nullable();
+            $table->string('origin')->nullable()->index();
             $table->timestamps();
         });
     }

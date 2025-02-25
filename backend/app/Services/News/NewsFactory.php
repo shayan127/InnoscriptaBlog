@@ -3,6 +3,8 @@
 namespace App\Services\News;
 
 use App\Models\Blog;
+use App\Services\News\Guardian\GuardianAdapter;
+use App\Services\News\Guardian\GuardianStrategy;
 use App\Services\News\NewsApi\NewsAPIAdapter;
 use App\Services\News\NewsApi\NewsAPIStrategy;
 use App\Services\News\NYT\NYTAdapter;
@@ -16,6 +18,7 @@ class NewsFactory
         return match ($origin) {
             'NewsAPI' => new NewsAPIStrategy($config, new NewsAPIAdapter()),
             'NYT' => new NYTStrategy($config, new NYTAdapter()),
+            'Guardian' => new GuardianStrategy($config, new GuardianAdapter()),
             default => null,
         };
     }
