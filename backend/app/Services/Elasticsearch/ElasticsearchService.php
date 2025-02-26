@@ -147,9 +147,13 @@ class ElasticsearchService
         if (!empty($preferredCategories) || !empty($preferredSources) || !empty($preferredAuthors)) {
             $esQuery['body']['query']['bool']['minimum_should_match'] = 1;
         }
-
-        $response = $this->client->search($esQuery);
-        return $response['hits']['hits'] ?? [];
+        try{
+            $response = $this->client->search($esQuery);
+            return $response['hits']['hits'] ?? [];
+        } catch (\Exception $e){
+            logger($e);
+        }
+        return [];
     }
 
 }

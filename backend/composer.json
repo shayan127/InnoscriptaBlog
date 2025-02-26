@@ -9,10 +9,11 @@
         "php": "^8.2",
         "darkaonline/l5-swagger": "^9.0",
         "elasticsearch/elasticsearch": "^8.17",
+        "fakerphp/faker": "^1.23",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
-        "tymon/jwt-auth": "^2.1",
-        "fakerphp/faker": "^1.23"
+        "predis/predis": "2.0.3",
+        "tymon/jwt-auth": "^2.1"
     },
     "require-dev": {
         "laravel/pail": "^1.1",

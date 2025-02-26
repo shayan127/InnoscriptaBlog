@@ -7,6 +7,7 @@ use App\Http\Middleware\AuthenticateApi;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(AuthenticateApi::class)->group(function() {
+    Route::get('/origins', [MetadataController::class, 'origins']);
     Route::get('/sources', [MetadataController::class, 'sources']);
     Route::get('/authors', [MetadataController::class, 'authors']);
 

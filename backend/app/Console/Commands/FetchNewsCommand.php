@@ -24,7 +24,7 @@ class FetchNewsCommand extends Command
             $interval = $config['interval'] ?? 60;
 
             if ($lastRun && Carbon::parse($lastRun)->addMinutes($interval)->isFuture()) {
-                continue;
+                //continue;
             }
 
             $blog = $this->getLastBlogByOrigin($origin);
