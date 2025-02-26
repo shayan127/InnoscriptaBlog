@@ -12,7 +12,8 @@ This is a backend project designed to fetch news data from multiple sources and 
    ```sh
    docker-compose up -d --build
    ```
-3. Access the application via the local port (Please wait a few minutes to access the content):
+3. Wait for 10 minutes to allow data to be fetched.
+4. Access the application via the local port (Please wait a few minutes to access the content):
    ```
    http://localhost:8181/api/documentation
    ```
@@ -21,21 +22,45 @@ This is a backend project designed to fetch news data from multiple sources and 
 
 ### **Swagger**
 Swagger is used for API documentation, making it easier to test and understand API endpoints.
-![Swagger UI](https://swagger.io/wp-content/uploads/2020/12/logo.svg)
+![Swagger UI](./Swagger.png)
 
 ### **Controllers**
 - **UserController**: Handles user authentication, token management, and user preferences.
 - **BlogController**: Manages blog search, creation, update, and deletion.
 - **MetadataController**: Handles metadata retrieval, category modification, and deletion.
 
+### **Blog Search Algorithm**
+In the blog search method:
+- User preferences such as author, category, and source are checked and applied to the final results if available.
+- Users can search for text in titles or filter results by date, category, and source.
+- Search results also incorporate user preferences.
+- Newer articles have higher priority in search results.
+- Articles from the past week have even higher priority.
+
 ### **JWT Authentication**
 Stateless authentication using token for secure authentication.
+
+To obtain a JWT token, send a `POST` request to the authentication endpoint with the following credentials:
+```
+POST /api/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "123456"
+}
+```
 
 ### **Elasticsearch**
 A powerful search engine used for:
 - Handling large volumes of news articles.
 - Providing fast and efficient search functionality.
 - Filtering results based on user preferences.
+
+Elasticsearch is accessible at:
+```
+http://localhost:9200
+```
 
 ### **Redis**
 Used for:
