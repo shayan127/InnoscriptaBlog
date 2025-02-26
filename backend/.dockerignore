@@ -2,10 +2,10 @@
 /.idea/workspace.xml
 .dockerignore
 vendor/
-bootstrap/cache
-!bootstrap/cache/.gitignore
+/node_modules
 .phpstorm.meta.php
 .phpunit.cache
 .phpunit.result.cache
 Dockerfile
 docker-compose.yml
+storage/logs/*.log
