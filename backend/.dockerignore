@@ -1,0 +1,11 @@
+/.git*
+/.idea/workspace.xml
+.dockerignore
+vendor/
+bootstrap/cache
+!bootstrap/cache/.gitignore
+.phpstorm.meta.php
+.phpunit.cache
+.phpunit.result.cache
+Dockerfile
+docker-compose.yml
